@@ -18,7 +18,7 @@ Whenever you have completed your work, you **MUST** commit and push your code in
 3. On the left side of your screen, click on the Source Control.
 4. If there was little improvement of the code, it may ask to "commit all changes". Click yes.
 5. Inside the Message bar, this is where you will document any changes to the repository. You should document all of your edits (preferably with a brief explanation, unless implicitly acknowledgeable)
-   > Documentation should start at the top of the file with "New Update pushed by <your name>:"
+   > Documentation should start at the top of the file with "New Update pushed by <name>:"
 6. When finished, go to the blue "Commit" button, click on the arrow next to it, and select "Commit & Push".
   - You may be told that changes are unstaged. Click yes.
 
@@ -26,6 +26,11 @@ If done properly, after refreshing this GitHub page, you will see your change on
 
 For further explanation on this concept, go through this resource:
 - How to commit and push to GitHub: [here](https://www.jcchouinard.com/create-your-first-github-project-in-vscode/#:~:text=To%20push%20code%20from%20Visual,if%20you%20haven%27t%20already.)
+
+There will be many people working and updating the repository, which is why it is critical, prior to working on the system, you must pull the recent repository change.
+1. After logging back into VSCode, open the Inventory System file.
+2. In the search bar at top of the IDE, type and enter ``>Git: Clone``. This will automatically pull and update your file with the recent repository changes.
+   - **NOTE**: You are still responsible for committing and pushing your additions/deletions of the code. Otherwise, your hard work will be lost into the abyss.
 
 Until further notice, the system will be using Java as the main language (as a quick and easy, universal language); however, if needed or preferred by the development team, the program can be reverted to Python. The following are resources to assist with learning Java:
 - A long, tedious, but very informative Java tutorial video: [here](https://youtu.be/xk4_1vDrzzo?si=8IULJtnpM-_2R13X)
