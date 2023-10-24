@@ -14,19 +14,20 @@ From here you are able to add, remove, and/or change any necessary classes and/o
 
 Whenever you have completed your work, you **MUST** commit and push your code into this repository
 1. **SAVE** your changed code (``File`` > ``Save``)
-2. In the search bar at the top of VSCode, type ``>Git: commit``.
-   - OR, go to the Source Control tab on the left.
+   - OR, under ``OPEN EDITORS``, click the small Save button.
+3. On the left side of your screen, click on the Source Control.
 4. If there was little improvement of the code, it may ask to "commit all changes". Click yes.
-5. A new tab will appear as ``COMMIT_EDITMSG``. This is where you will document any changes to the repository. You should document all of your edits (preferably with a brief explanation, unless implicitly acknowledgeable)
+5. Inside the Message bar, this is where you will document any changes to the repository. You should document all of your edits (preferably with a brief explanation, unless implicitly acknowledgeable)
    > Documentation should start at the top of the file with "New Update pushed by <your name>:"
-   > Documentation should be highlighted white, not green (if so, remove the "#" at the start).
 6. When finished, go to the blue "Commit" button, click on the arrow next to it, and select "Commit & Push".
+  - You may be told that changes are unstaged. Click yes.
 
-For further explanation on this concept, go through these resources:
+If done properly, after refreshing this GitHub page, you will see your change on the top of the website.
+
+For further explanation on this concept, go through this resource:
 - How to commit and push to GitHub: [here](https://www.jcchouinard.com/create-your-first-github-project-in-vscode/#:~:text=To%20push%20code%20from%20Visual,if%20you%20haven%27t%20already.)
-- How to make commit message: [here](https://www.youtube.com/watch?v=xGZ7OJYVFuY)
 
-Until further notice, the system will be using Java as the main language (as a quick and easy, universal language); however, if needed or preferred by the development team, the program can be reverted to Python.
+Until further notice, the system will be using Java as the main language (as a quick and easy, universal language); however, if needed or preferred by the development team, the program can be reverted to Python. The following are resources to assist with learning Java:
 - A long, tedious, but very informative Java tutorial video: [here](https://youtu.be/xk4_1vDrzzo?si=8IULJtnpM-_2R13X)
 - A YouTube playlist with shorter videos on Java concepts: [here](https://youtube.com/playlist?list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5&si=8lj3W7Afe4OefMsy)
 - A playlist for Python coders: [here](https://www.youtube.com/watch?v=MeCw4yncc6E&list=PLiwphLky56kA0uz5G3pR9VVrL1rNZsfOr)
@@ -51,4 +52,4 @@ Once you've installed the extension, you can either create a collaboration sessi
 
 
 
-Version: 1.0
+Version: 1.1
