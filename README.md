@@ -2,7 +2,7 @@
 
 This repository contains ENGR 1411-004 Team 9's Inventory Management System. This is where the developers will change any coding in the program.
 
-In order to access and import the system into your Visual Studio Code, you must be invited into this GitHub repository by one of the developers (if you're reading this, you've already completed that task). You must then copy either the HTTPS or SSH link of the repository (which can be found by clicking the green "Code" button at the top right corner) and type ``>Git: clone`` followed by the requested URL/link of the desired repository in Visual Studio Code.
+In order to access and import the system into your Visual Studio Code, you must be invited into this GitHub repository by one of the developers (if you're reading this, you've already completed that task). You must then copy either the HTTPS or SSH link of the repository (which can be found by clicking the green "Code" button at the top right corner) and type ``>Git: Clone`` followed by the requested URL/link of the desired repository in Visual Studio Code.
 > **NOTE:** in order for this task to correctly compile and work, you must have a "Git" software installed in your computer (you can look for a Git in Visual Studio Code's Extensions tab or any JAVA-SUPPORTED (until further notice) software located at the Internet.
 >
 > One example that I (JP) am using can be found [here](https://git-scm.com/downloads).
@@ -18,7 +18,7 @@ Whenever you have completed your work, you **MUST** commit and push your code in
 3. On the left side of your screen, click on the Source Control.
 4. If there was little improvement of the code, it may ask to "commit all changes". Click yes.
 5. Inside the Message bar, this is where you will document any changes to the repository. You should document all of your edits (preferably with a brief explanation, unless implicitly acknowledgeable)
-   > Documentation should start at the top of the file with "New Update pushed by <name>:"
+   > Documentation should start at the top of the file with "New Update pushed by (your name):"
 6. When finished, go to the blue "Commit" button, click on the arrow next to it, and select "Commit & Push".
   - You may be told that changes are unstaged. Click yes.
 
@@ -29,7 +29,7 @@ For further explanation on this concept, go through this resource:
 
 There will be many people working and updating the repository, which is why it is critical, prior to working on the system, you must pull the recent repository change.
 1. After logging back into VSCode, open the Inventory System file.
-2. In the search bar at top of the IDE, type and enter ``>Git: Clone``. This will automatically pull and update your file with the recent repository changes.
+2. In the search bar at top of the IDE, type and enter ``>Git: Pull``. This will automatically pull and update your file with the recent repository changes.
    - **NOTE**: You are still responsible for committing and pushing your additions/deletions of the code. Otherwise, your hard work will be lost into the abyss.
 
 Until further notice, the system will be using Java as the main language (as a quick and easy, universal language); however, if needed or preferred by the development team, the program can be reverted to Python. The following are resources to assist with learning Java:
