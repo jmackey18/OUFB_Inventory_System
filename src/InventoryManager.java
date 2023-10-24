@@ -9,7 +9,8 @@ public class InventoryManager {
     private final String startPrompt = "\n1. Manage Inventory\n2. Fulfill an order\n3. Add a donation\n4. Leave terminal\n> > > ";
 	private ArrayList<String> productNames;
     private ArrayList<Integer> inventoryNumbers;
-
+	private int ex = 1;
+	private String  ex2 = "wow";
 
     public InventoryManager() {
         productNames = new ArrayList<String>();
