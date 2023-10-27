@@ -16,6 +16,7 @@ public class InventoryManager {
 
 	private BufferedReader lastInvReader, currentInvReader;
 	private BufferedWriter lastInvWriter, currentInvWriter;
+	
 
     public InventoryManager() {
         productNames = new ArrayList<String>();
