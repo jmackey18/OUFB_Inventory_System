@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class InventoryManager {
+	
     private final String lastSavedInventoryFile = "OUFB_Inventory_System/LastSavedInventory.txt";
 	private final String currentInventoryFile = "OUFB_Inventory_System/CurrentInventory.txt";
     
@@ -36,8 +37,29 @@ public class InventoryManager {
 			System.out.println("File(s) cannot be written in.");
 		}
     }
+    
+	public void makeCurrentInventory() {
 
-    public void run() {
+		String line;
+		try {		
+
+			while((line = lastInvReader.readLine()) != null) {
+				productNames.add(line.substring(0, line.indexOf(":")));
+				inventoryNumbers.add(Integer.parseInt(line.substring(line.indexOf(":")+2)));
+
+				currentInvWriter.write(productNames.get(productNames.size()-1) + ": " + inventoryNumbers.get(inventoryNumbers.size()-1) + System.lineSeparator());
+			}
+			lastInvReader.close();
+			currentInvWriter.close();
+
+		} catch (IOException e) {
+			System.out.println("I/O Exception");
+		}
+		
+	}
+
+    
+	public void run() {
 
 		doStartPrompt();
 		int input;
@@ -75,30 +97,11 @@ public class InventoryManager {
 		}
     }
     
-    public void makeCurrentInventory() {
-
-		String line;
-		try {		
-
-			while((line = lastInvReader.readLine()) != null) {
-				productNames.add(line.substring(0, line.indexOf(":")));
-				inventoryNumbers.add(Integer.parseInt(line.substring(line.indexOf(":")+2)));
-
-				currentInvWriter.write(productNames.get(productNames.size()-1) + ": " + inventoryNumbers.get(inventoryNumbers.size()-1) + System.lineSeparator());
-			}
-			lastInvReader.close();
-			currentInvWriter.close();
-
-		} catch (IOException e) {
-			System.out.println("I/O Exception");
-		}
-		
-	}
-
 	public void doStartPrompt(){
         System.out.print(commandSeparator + "\nWhat would you like to do?" + startPrompt);
 	}
 
+	
 	public void manageInventoryPrompt() {
 
 		System.out.print("Please select the desired tool:\n1. Show current inventory\n2. Edit product inventory\n3. Add received products\n4. Show target inventory\n5. Edit target inventory\n6. Save inventory\n> > > ");
@@ -110,16 +113,21 @@ public class InventoryManager {
 
 				switch(input = scan.nextInt()) {
 					case 1:
-						System.out.println(commandSeparator + "\nDo something 1");
+						System.out.println(commandSeparator + "\n");
+						showInventory();
 						break;
 					case 2:
-						System.out.println(commandSeparator + "\nDo something 2"); 
+						System.out.println(commandSeparator);
+						System.out.println("NOTE: This operation requires MANAGER creditientials.\n");
+						editProductInventory();
 						break;
 					case 3:
-						System.out.println(commandSeparator + "\nDo something 3"); 
+						System.out.println(commandSeparator); 
+						addReceivedProducts();
 						break;
 					case 4:
-						System.out.println(commandSeparator + "\nDo something 4"); 
+						System.out.println(commandSeparator); 
+						showTargetInventory();
 						break;
 					case 5:
 						System.out.println(commandSeparator + "\nDo something 5"); 
@@ -144,6 +152,93 @@ public class InventoryManager {
 			manageInventoryPrompt();
 		}
 	}
+	
+	public void showInventory() {
+
+		for(int i = 0; i < productNames.size(); i++) {
+			System.out.print(productNames.get(i) + " - " + inventoryNumbers.get(i));
+			System.out.print(" currently in stock \t || \t ");
+
+			String stockStatus;
+			int stockCount = inventoryNumbers.get(i);
+			if(stockCount == 0) {
+				stockStatus = "Product UNAVAILABLE";
+			} else if(stockCount <= 700) {
+				stockStatus = "Product in LOW range";
+			} else if(stockCount <= 1150) {
+				stockStatus = "Product in moderate range";
+			} else {
+				stockStatus = "Product in safe range";
+			}
+
+			System.out.println(" " + stockStatus);
+		}
+		System.out.println();
+	}
+	
+	public void editProductInventory() {
+		String username = "";
+		String password = "";
+		
+		System.out.print("Please provide Manager's username : ");
+		if(scan.hasNext()) {
+			username = scan.next();
+			System.out.print("Please provide Manager's password : ");
+			if(scan.hasNext()) {
+				password = scan.next();
+			}	
+		}
+		
+		if(!username.equals("manager") || !password.equals("password")) {
+			System.out.println("Username and/or password incorrect.");
+			editProductInventory();
+		} else {
+
+			System.out.print("\nPlease provide the product SKU : ");
+			int productSKU = scan.nextInt();
+			System.out.print("Please provide the proper product operation [num to add or -num (negative number) to remove] : ");
+			int numAmount = scan.nextInt();
+
+			System.out.println(productSKU + ": " + numAmount);
+		}
+	}
+
+	public void addReceivedProducts() {
+		
+	}
+
+	public void showTargetInventory() {
+
+	}
+
+	public void editTargetInventory() {
+
+	}
+
+	public void saveInventory() {
+		
+		productNames.clear();
+		inventoryNumbers.clear();
+
+		String line;
+		try {
+			lastInvWriter = new BufferedWriter(new FileWriter(lastSavedInventoryFile));
+
+			while((line = currentInvReader.readLine()) != null){
+				productNames.add(line.substring(0, line.indexOf(":")));
+				inventoryNumbers.add(Integer.parseInt(line.substring(line.indexOf(":")+2)));
+
+				lastInvWriter.write(productNames.get(productNames.size()-1) + ": " + inventoryNumbers.get(inventoryNumbers.size()-1) + System.lineSeparator());
+			}
+			currentInvReader.close();
+			lastInvWriter.close();
+
+			System.out.println(commandSeparator + "\nInventory has been saved.");
+		} catch (IOException e) {
+			System.out.println("File(s) cannot be read by the program.");
+		}
+	}
+	
 
 	public void fulfillOrderPrompt(){
 		System.out.print("Please selected desired tool:\n1. Fulfill physical order\n2. Create online order\n3. Delete online order\n4. View online orders\n > > > ");
@@ -185,34 +280,12 @@ public class InventoryManager {
 		}
 	}
 
+	
 	public void addDonationPrompt(){
 		System.out.println(commandSeparator + "\nDo something about donation");
 	}
 
-	public void saveInventory() {
-		
-		productNames.clear();
-		inventoryNumbers.clear();
 
-		String line;
-		try {
-			lastInvWriter = new BufferedWriter(new FileWriter(lastSavedInventoryFile));
-
-			while((line = currentInvReader.readLine()) != null){
-				productNames.add(line.substring(0, line.indexOf(":")));
-				inventoryNumbers.add(Integer.parseInt(line.substring(line.indexOf(":")+2)));
-
-				lastInvWriter.write(productNames.get(productNames.size()-1) + ": " + inventoryNumbers.get(inventoryNumbers.size()-1) + System.lineSeparator());
-			}
-			currentInvReader.close();
-			lastInvWriter.close();
-
-			System.out.println(commandSeparator + "\nInventory has been saved.");
-		} catch (IOException e) {
-			System.out.println("File(s) cannot be read by the program.");
-		}
-	}
-	
 	public void leaveTerminal() {
 		System.out.print(commandSeparator + "\nPlease confirm leaving the system (y/n) > > > ");
 		String input;
@@ -245,5 +318,14 @@ public class InventoryManager {
 
     public void endTask() {
 		saveInventory();
+		System.out.println("Ending terminal...");
+	}
+
+	public ArrayList<String> getProductNames() {
+		return productNames;
+	}
+
+	public ArrayList<Integer> getInventoryNumbers() {
+		return inventoryNumbers;
 	}
 }
