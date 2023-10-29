@@ -1,7 +1,7 @@
-Product A: 661
-Product B: 772
+Product A: 711
+Product B: 671
 Product C: 883
-Product D: 994
+Product D: 870
 Product E: 1105
 Product F: 1216
 Product G: 1327

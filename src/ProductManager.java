@@ -2,25 +2,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductManager {
-    private InventoryManager invAccess = new InventoryManager();
+    private InventoryManager invAccess;
     private ArrayList<String> productNames;
     private ArrayList<Integer> inventoryNumbers;
-    private HashMap<Integer, String> productIdentifiers;
-    private static int DEFAULT_SKU = 1000000;
+    private HashMap<Integer, String> productNameIdentifiers;
+    private HashMap<Integer, Integer> productStockIdentifiers;
+    private static int DEFAULT_SKU;
 
     public ProductManager() {
+        invAccess = new InventoryManager();
         productNames = invAccess.getProductNames();
         inventoryNumbers = invAccess.getInventoryNumbers();
-        productIdentifiers = new HashMap<Integer, String>();
+        productNameIdentifiers = new HashMap<Integer, String>();
+        productStockIdentifiers = new HashMap<Integer, Integer>();
+        DEFAULT_SKU = 1000000;
 
-        for(String name : productNames) {
+        for(int i = 0; i < productNames.size(); i++) {
             DEFAULT_SKU++;
-            productIdentifiers.put(DEFAULT_SKU, name);
+            productNameIdentifiers.putIfAbsent(DEFAULT_SKU, productNames.get(i));
+            productStockIdentifiers.putIfAbsent(DEFAULT_SKU, inventoryNumbers.get(i));
         }
 
     }
 
-    public HashMap<Integer, String> getProductIdentifiers() {
-        return productIdentifiers;
+    public HashMap<Integer, String> getProductNameIdentifiers() {
+        return productNameIdentifiers;
+    }
+
+    public HashMap<Integer, Integer> getProductStockIdentifiers() {
+        return productStockIdentifiers;
+    }
+
+    public ArrayList<String> getProductNames() {
+        return productNames;
+    }
+
+    public ArrayList<Integer> getInventoryNumbers() {
+        return inventoryNumbers;
     }
 }
