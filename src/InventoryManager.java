@@ -13,21 +13,24 @@ public class InventoryManager {
     private final String startPrompt = "\n1. Manage Inventory\n2. Fulfill an order\n3. Add a donation\n4. Leave terminal\n> > > ";
 	
 	private ArrayList<String> productNames;
-    private ArrayList<Integer> inventoryNumbers;
+    private ArrayList<Integer> inventoryNumbers, invTargetNumbers;
 	private Scanner scan;
 
-	private BufferedReader lastInvReader, currentInvReader;
-	private BufferedWriter lastInvWriter, currentInvWriter;
+	private BufferedReader lastInvReader, currentInvReader, invTargetReader;
+	private BufferedWriter lastInvWriter, currentInvWriter, invTargetWriter;
 
     public InventoryManager() {
         productNames = new ArrayList<String>();
         inventoryNumbers = new ArrayList<Integer>();
+		invTargetNumbers = new ArrayList<Integer>();
+
 		scan = new Scanner(System.in);
 
 		try {
 			lastInvReader = new BufferedReader(new FileReader(lastSavedInventoryFile));
 			currentInvReader = new BufferedReader(new FileReader(currentInventoryFile));
 			currentInvWriter = new BufferedWriter(new FileWriter(currentInventoryFile));
+			invTargetReader = new BufferedReader(new FileReader(inventoryTargetFile));
 
 			makeCurrentInventory();
 
@@ -42,6 +45,7 @@ public class InventoryManager {
 	public void makeCurrentInventory() {
 
 		String line;
+		String targetLine;
 		try {		
 
 			while((line = lastInvReader.readLine()) != null) {
@@ -52,6 +56,11 @@ public class InventoryManager {
 			}
 			lastInvReader.close();
 			currentInvWriter.close();
+
+			while((targetLine = invTargetReader.readLine()) != null) {
+			invTargetNumbers.add(Integer.parseInt(targetLine.substring(targetLine.indexOf(":")+2)));
+			}
+			invTargetReader.close();
 
 		} catch (IOException e) {
 			System.out.println("I/O Exception");
@@ -123,15 +132,18 @@ public class InventoryManager {
 						editProductInventory();
 						break;
 					case 3:
-						System.out.println(commandSeparator); 
+						System.out.println(commandSeparator);
+						System.out.println("NOTE: This operation requires DISTRIBUTION member or MANAGER credentials.\n"); 
 						addReceivedProducts();
 						break;
 					case 4:
-						System.out.println(commandSeparator); 
+						System.out.println(commandSeparator);
 						showTargetInventory();
 						break;
 					case 5:
-						System.out.println(commandSeparator + "\nDo something 5"); 
+						System.out.println(commandSeparator);
+						System.out.println("NOTE: This operation requires DISTRIBUTION member or MANAGER credentials.\n"); 
+						editTargetInventory();
 						break;
 					case 6:
 						saveInventory(); 
@@ -193,16 +205,33 @@ public class InventoryManager {
 		if(!username.equals("manager") || !password.equals("password")) {
 			System.out.println("Username and/or password incorrect.");
 			editProductInventory();
+
 		} else {
 			String finalChoice = "";
 			do {
 
-				System.out.print("\nPlease provide the product SKU : ");
-				int productSKU = scan.nextInt();
-				System.out.print("Please provide the proper product operation [num to add or -num (neg. num) to remove] : ");
-				int numAmount = scan.nextInt();
-
 				ProductManager productAccess = new ProductManager();
+				int productSKU = validatedSKU(productAccess);
+
+				int numAmount = 0;
+				while(true) {
+					try {
+						System.out.print("Please provide the proper product operation [num to add or -num (neg. num) to remove]\n> > > ");
+						numAmount = scan.nextInt();
+
+						int currentInv = productAccess.getProductStockIdentifiers().get(productSKU);
+						while(numAmount + currentInv < 0) {
+							System.out.print("\nProduct operation must be less than/equal to " + currentInv + ". Please provide a valid operation\n> > > ");
+							numAmount = scan.nextInt();
+						}
+
+						break;
+					} catch (InputMismatchException e) {
+						System.out.println("\nInput must be a number.");
+						scan.next();
+					}
+				}
+				
 				String chosenProduct = productAccess.getProductNameIdentifiers().get(productSKU);
 				if(numAmount <= 0) {
 					System.out.println("\nRemoving " + Math.abs(numAmount) +  " of " + chosenProduct + " from Inventory. Please confirm (y/n)");
@@ -220,7 +249,7 @@ public class InventoryManager {
 
 					default:
 						while(!finalChoice.equals("y") && !finalChoice.equals("n")) {	
-							System.out.println("\nPlease provide a proper choice (y/n) : ");
+							System.out.println("\nPlease provide a proper choice (y/n)\n> > > ");
 							finalChoice = scan.next();
 
 						}
@@ -242,11 +271,85 @@ public class InventoryManager {
 	}
 
 	public void showTargetInventory() {
-		
+
+		System.out.println();
+		for(int i = 0; i < invTargetNumbers.size(); i++) {
+			System.out.println(productNames.get(i) + " - " + invTargetNumbers.get(i));
+		}
+		System.out.println();
+
 	}
 
 	public void editTargetInventory() {
+		String username = "";
+		String password = "";
 
+		System.out.print("Please provide Distributor/Manager's username : ");
+		if(scan.hasNext()) {
+			username = scan.next();
+			System.out.print("Please provide Distributor/Manager's password : ");
+			if(scan.hasNext()) {
+				password = scan.next();
+			}	
+		}
+		
+		if((!username.equals("manager") || !password.equals("password")) && 
+			(!username.equals("distributor") || !password.equals("password2"))) {
+
+			System.out.println("Username and/or password incorrect.");
+			editTargetInventory();
+
+		} else {
+			String finalChoice = "";
+			do {
+
+				ProductManager productAccess = new ProductManager();
+				int productSKU = validatedSKU(productAccess);
+				
+				int numAmount = 0;
+				while(true) {
+					try {
+						System.out.print("Please provide the desired target (minimum) stock of the product\n> > > ");
+						numAmount = scan.nextInt();
+
+						while(numAmount < 0) {
+							System.out.print("Target inventory cannot be negative. Please provide a valid minimum\n> > > ");
+							numAmount = scan.nextInt();
+						}
+
+						break;
+					} catch (InputMismatchException e) {
+						System.out.println("\nInput must be a number.");
+						scan.next();
+					}
+				}
+
+				String chosenProduct = productAccess.getProductNameIdentifiers().get(productSKU);
+				System.out.println("\nThe target inventory of " + chosenProduct + " will be " + numAmount + ". Please confirm (y/n)");
+				System.out.print("> > > ");
+
+				finalChoice = scan.next();
+				switch(finalChoice) {
+					case "n":
+						System.out.println("Operation will restart...\n");
+						break;
+					default:
+						while(!finalChoice.equals("y") && !finalChoice.equals("n")) {	
+							System.out.print("\nPlease provide a proper choice (y/n)\n> > > ");
+							finalChoice = scan.next();
+
+						}
+						if(finalChoice.equals("y")) {
+
+							int newTarget = numAmount;
+							productAccess.getProductStockIdentifiers().put(productSKU, newTarget);
+							saveTargetInventory(productAccess.getProductNameIdentifiers().get(productSKU), newTarget);
+							saveTargetInventory();
+						}
+						break;
+				}
+			} while(finalChoice.equals("n"));
+		}
 	}
 
 	public void saveProductInventory(String productName, int newProductStock) {
@@ -257,9 +360,17 @@ public class InventoryManager {
 			}
 		}
 	}
+
+	public void saveTargetInventory(String productName, int newTarget) {
+		for(int i = 0; i < productNames.size(); i++) {
+			if(productNames.get(i).equals(productName)) {
+				invTargetNumbers.set(i, newTarget);
+				break;
+			}
+		}
+	}
 	
 	public void saveInventory() {
-
 		try {
 			currentInvWriter = new BufferedWriter(new FileWriter(currentInventoryFile));
 
@@ -274,6 +385,22 @@ public class InventoryManager {
 			System.out.println("\nInventory has been updated.");
 		}
 		
+	}
+
+	public void saveTargetInventory() {
+		try {
+			invTargetWriter = new BufferedWriter(new FileWriter(inventoryTargetFile));
+
+			for(int i = 0; i < productNames.size(); i++) {
+				invTargetWriter.write(productNames.get(i) + ": " + invTargetNumbers.get(i) + System.lineSeparator());
+			}
+			invTargetWriter.close();
+
+		} catch (IOException e) {
+			System.out.println("Error trying to save target inventory; unable to read/write from/in " + inventoryTargetFile + ".");
+		} finally {
+			System.out.println("\nTarget inventory has been updated.");
+		}
 	}
 	
 
@@ -378,11 +505,48 @@ public class InventoryManager {
 		}
 	}
 
+
+	public int validatedSKU(ProductManager productAccess) {
+		int productSKU = 0;
+		boolean invalidInput = true;
+		while(invalidInput) {
+			try {
+				System.out.print("\nPlease provide the product SKU : ");
+					
+				boolean checkSKU = false;
+				while(checkSKU == false) {
+
+					productSKU = scan.nextInt();
+					for(int sku : productAccess.getProductStockIdentifiers().keySet()) {
+						if(productSKU == sku) {
+							checkSKU = true;
+							break;
+							}
+					}
+						
+					if(checkSKU == false) {
+						System.out.print("\nProduct SKU does not exist. Please provide a valid SKU : ");
+					}
+				}
+				invalidInput = false;
+			} catch (InputMismatchException e) {
+				System.out.println("\nInput was not a number; you must enter a proper, numbered SKU.");
+				scan.next();
+			}
+		}
+		
+		return productSKU;
+	}
+
 	public ArrayList<String> getProductNames() {
 		return productNames;
 	}
 
 	public ArrayList<Integer> getInventoryNumbers() {
 		return inventoryNumbers;
+	}
+
+	public ArrayList<Integer> getInvTargetNumbers() {
+		return invTargetNumbers;
 	}
 }

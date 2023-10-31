@@ -1,9 +1,9 @@
-Product A: 0
-Product B: 0
-Product C: 0
-Product D: 0
-Product E: 0
-Product F: 0
+Product A: 80
+Product B: 100
+Product C: 400
+Product D: 150
+Product E: 550
+Product F: 475
 Product G: 0
 Product H: 0
 Product I: 0
