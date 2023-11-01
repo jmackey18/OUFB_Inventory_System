@@ -14,6 +14,8 @@ public class InventoryManager {
 	
 	private ArrayList<String> productNames;
     private ArrayList<Integer> inventoryNumbers, invTargetNumbers;
+	private EmpList emplistAccess;
+	private Employee currentEmp;
 	private Scanner scan;
 
 	private BufferedReader lastInvReader, currentInvReader, invTargetReader;
@@ -24,6 +26,8 @@ public class InventoryManager {
         inventoryNumbers = new ArrayList<Integer>();
 		invTargetNumbers = new ArrayList<Integer>();
 
+		emplistAccess = new EmpList();
+		currentEmp = null;
 		scan = new Scanner(System.in);
 
 		try {
@@ -70,8 +74,31 @@ public class InventoryManager {
 
     
 	public void run() {
+		boolean invalidCreds = true;
+		do {
+			System.out.println(commandSeparator+"\n");
+			System.out.print("Please enter your username > > > ");
+			String userInput = scan.next();
+			System.out.print("Please enter your password > > > ");
+			String passInput = scan.next();
+
+			for(String emp : emplistAccess.getAllCreds().keySet()) {
+				Employee i = emplistAccess.getAllCreds().get(emp);
+
+				if(i.equals(new Employee(userInput, passInput, i.getPosition()))) {
+					System.out.println("\nEntering the Inventory System. Welcome, " + emp + "!");
+					currentEmp = new Employee(userInput, passInput, i.getPosition());
+					invalidCreds = false;
+					break;
+				}
+			}
+			if(invalidCreds) {
+				System.out.println("\nInvalid username/password.");
+			}
+		} while(invalidCreds);
 
 		doStartPrompt();
+
 		int input;
 		try {
 			while((input = scan.nextInt()) != 4) {
@@ -126,35 +153,47 @@ public class InventoryManager {
 						System.out.println(commandSeparator + "\n");
 						showInventory();
 						break;
+
 					case 2:
 						System.out.println(commandSeparator);
-						System.out.println("NOTE: This operation requires MANAGER creditientials.\n");
-						editProductInventory();
-						break;
-					case 3:
-						System.out.println(commandSeparator);
 						System.out.println("NOTE: This operation requires DISTRIBUTION member or MANAGER credentials.\n"); 
-						addReceivedProducts();
+						if(currentEmp.getPosition().equals("Manager") || currentEmp.getPosition().equals("Distributor")) {
+							editProductInventory();
+						} else {
+							System.out.println("You are not a Distributor/Manager; restarting prompt...");
+							System.out.println(commandSeparator);
+							manageInventoryPrompt();
+						}
 						break;
-					case 4:
+
+					case 3:
 						System.out.println(commandSeparator);
 						showTargetInventory();
 						break;
-					case 5:
+
+					case 4:
 						System.out.println(commandSeparator);
 						System.out.println("NOTE: This operation requires DISTRIBUTION member or MANAGER credentials.\n"); 
-						editTargetInventory();
+						if(currentEmp.getPosition().equals("Manager") || currentEmp.getPosition().equals("Distributor")) {
+							editTargetInventory();
+						} else {
+							System.out.println("You are not a Distributor/Manager; restarting prompt...");
+							System.out.println(commandSeparator);
+							manageInventoryPrompt();
+						}
 						break;
-					case 6:
+
+					case 5:
 						saveInventory(); 
-						break;
+						break;				
+
 					default:
 						System.out.println(commandSeparator);
 						System.out.print("Invalid input; please provide a proper option : ");
 						break;
 				}
 
-				if(input >= 1 && input <= 6) {
+				if(input >= 1 && input <= 5) {
 					break;
 				}
 
@@ -174,11 +213,15 @@ public class InventoryManager {
 
 			String stockStatus;
 			int stockCount = inventoryNumbers.get(i);
+			int targetCount = invTargetNumbers.get(i);
+			int maxModRange = targetCount + 100;
+			int minModRange = targetCount - 100;
+
 			if(stockCount == 0) {
 				stockStatus = "Product UNAVAILABLE";
-			} else if(stockCount <= 700) {
+			} else if(stockCount > 0 && stockCount < minModRange) {
 				stockStatus = "Product in LOW range";
-			} else if(stockCount <= 1150) {
+			} else if(stockCount >= minModRange && stockCount < maxModRange) {
 				stockStatus = "Product in moderate range";
 			} else {
 				stockStatus = "Product in safe range";
@@ -193,16 +236,12 @@ public class InventoryManager {
 		String username = "";
 		String password = "";
 		
-		System.out.print("Please provide Manager's username : ");
-		if(scan.hasNext()) {
-			username = scan.next();
-			System.out.print("Please provide Manager's password : ");
-			if(scan.hasNext()) {
-				password = scan.next();
-			}	
-		}
+		System.out.print("Please provide Distributor/Manager's username\n> > > ");
+		username = scan.next();
+		System.out.print("Please provide Distributor/Manager's password\n> > > ");
+		password = scan.next();
 		
-		if(!username.equals("manager") || !password.equals("password")) {
+		if(!username.equals(currentEmp.getUserName()) || !password.equals(currentEmp.getPassword())) {
 			System.out.println("Username and/or password incorrect.");
 			editProductInventory();
 
@@ -259,15 +298,19 @@ public class InventoryManager {
 							productAccess.getProductStockIdentifiers().put(productSKU, newStock);
 							saveProductInventory(productAccess.getProductNameIdentifiers().get(productSKU), newStock);
 							saveInventory();
+
+							System.out.print("\nWould you like to restart the operation? (yes/no)\n> > > ");
+							finalChoice = scan.next();
+							if(finalChoice.equals("yes")) {
+								editProductInventory();
+							} else if(finalChoice.equals("no")) {
+								continue;
+							}
 						}
 						break;
 				}
 			} while(finalChoice.equals("n"));
 		}
-	}
-
-	public void addReceivedProducts() {
-		
 	}
 
 	public void showTargetInventory() {
@@ -537,6 +580,7 @@ public class InventoryManager {
 		
 		return productSKU;
 	}
+ 
 
 	public ArrayList<String> getProductNames() {
 		return productNames;

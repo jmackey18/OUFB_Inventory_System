@@ -2,11 +2,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductManager {
+
     private InventoryManager invAccess;
+
     private ArrayList<String> productNames;
     private ArrayList<Integer> inventoryNumbers, invTargetNumbers;
+
     private HashMap<Integer, String> productNameIdentifiers;
     private HashMap<Integer, Integer> productStockIdentifiers, productTargetIdentifiers;
+    
     private static int DEFAULT_SKU;
 
     public ProductManager() {

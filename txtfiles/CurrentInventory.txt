@@ -1,6 +1,6 @@
-Product A: 861
-Product B: 671
-Product C: 883
+Product A: 611
+Product B: 356
+Product C: 483
 Product D: 870
 Product E: 1105
 Product F: 1216
