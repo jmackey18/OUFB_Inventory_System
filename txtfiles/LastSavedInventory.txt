@@ -1,10 +1,27 @@
-Product A: 611
-Product B: 356
-Product C: 483
-Product D: 870
-Product E: 1105
-Product F: 1216
-Product G: 1327
-Product H: 1438
-Product I: 1549
-Product J: 1561
+101,Tomato Soup: 150
+102,Cream of Mushroom Soup: 163
+103,Corn: 85
+104,Green Beans: 79
+105,Carrots: 51
+106,Apple Sauce: 200
+107,Pineapple: 60
+108,Vienna Sausages: 84
+109,Chicken: 29
+110,Pinto Beans: 97
+111,Pork and Beans: 107
+112,Fettuccine Pasta: 987
+113,Mac and Cheese: 76
+114,Spaghettios: 85
+115,White Rice: 45
+116,Potatoes: 64
+117,Peanut Butter: 3
+118,CornFlakes: 52
+119,Milk: 37
+120,Water Bottles: 100074
+121,Deodorant: 187
+122,Dental Floss: 504
+123,Hand Sanitizer: 205
+124,Toilet Paper: 398
+125,Paper Towels: 756
+126,Tampons (Regular): 298
+127,Tampons (Heavy): 847

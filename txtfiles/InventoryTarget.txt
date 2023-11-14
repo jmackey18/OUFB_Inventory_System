@@ -1,10 +1,27 @@
-Product A: 100
-Product B: 250
-Product C: 300
-Product D: 500
-Product E: 425
-Product F: 250
-Product G: 550
-Product H: 375
-Product I: 650
-Product J: 215
+Tomato Soup: 50
+Cream of Mushroom Soup: 50
+Corn: 50
+Green Beans: 50
+Carrots: 50
+Apple Sauce: 50
+Pineapple: 50
+Vienna Sausages: 50
+Chicken: 50
+Pinto Beans: 50
+Pork and Beans: 50
+Fettuccine Pasta: 35
+Mac and Cheese: 100
+Spaghettios: 100
+White Rice: 50
+Potatoes: 50
+Peanut Butter: 50
+CornFlakes: 50
+Milk: 35
+Water Bottles: 1000
+Deodorant: 50
+Dental Floss: 50
+Hand Sanitizer: 50
+Toilet Paper: 150
+Paper Towels: 150
+Tampons (Regular): 150
+Tampons (Heavy): 150
